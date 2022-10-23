@@ -1,16 +1,19 @@
 package org.firstinspires.ftc.teamcode.kurio.math;
 
-
+import static org.firstinspires.ftc.teamcode.kurio.math.MathUtil.angleWrap;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+
+import java.util.Locale;
 
 public class Pose extends Point implements Cloneable {
     public double heading;
 
     public static Pose ZERO = new Pose(0, 0, 0);
+
+    private static final float FULL_FIELD = 144.0f;
 
     public Pose(double x, double y, double heading) {
         super(x, y);
@@ -67,9 +70,16 @@ public class Pose extends Point implements Cloneable {
         return new Vector2d(cos(heading), sin(heading));
     }
 
+    public Pose toFTCSystem() {
+        double x = -this.y + (FULL_FIELD / 2.);
+        double y = this.x - (FULL_FIELD / 2.);
+        double heading = angleWrap(Math.PI - this.heading);
+        return new Pose(x, y, heading);
+    }
+
     @Override
     public String toString() {
-        return String.format("{x: %.3f, y: %.3f, θ: %.3f}", x, y, heading);
+        return String.format(Locale.US, "{x: %.3f, y: %.3f, θ: %.3f}", x, y, heading);
     }
 
     @Override

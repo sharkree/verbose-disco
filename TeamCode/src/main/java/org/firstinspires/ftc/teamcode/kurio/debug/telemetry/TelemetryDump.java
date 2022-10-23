@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
+import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.PurePursuitPath;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +49,22 @@ public class TelemetryDump implements PoseWatcher {
         TelemetryPacket packet = new TelemetryPacket();
         Canvas canvas = packet.fieldOverlay();
 
+        pose = pose.toFTCSystem();
+
         poseHistory.add(pose);
         DashboardUtil.drawRobot(canvas, pose);
         DashboardUtil.drawPoseHistory(canvas, poseHistory);
+
+        dashboard.sendTelemetryPacket(packet);
+    }
+
+    @Override
+    public void sendPath(PurePursuitPath path) {
+        TelemetryPacket packet = new TelemetryPacket();
+        Canvas canvas = packet.fieldOverlay();
+
+
+        path.draw(canvas);
 
         dashboard.sendTelemetryPacket(packet);
     }

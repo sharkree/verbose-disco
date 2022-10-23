@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.kurio.mecanumpursuit;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,7 +23,7 @@ import java.util.List;
 @Config
 public class PurePursuitPath {
     public static double TRACK_SPEED = 0.5;
-    public static double DEAD_MAN_SWITCH = 1500;
+    public static double DEAD_MAN_SWITCH = 2000;
     private final Robot robot;
     public List<WayPoint> waypoints;
 
@@ -30,10 +32,6 @@ public class PurePursuitPath {
     public int currPoint;
     boolean interrupting;
     public ElapsedTime timeUntilDeadman;
-
-//    public PurePursuitPath(Robot robot) {
-//        this(robot, new LinkedList<>());
-//    }
 
     public PurePursuitPath(Robot robot, WayPoint... points) {
         this(robot, Arrays.asList(points));
@@ -81,23 +79,29 @@ public class PurePursuitPath {
             // Stop waypoint deadman switch
             if (target instanceof StopWayPoint && timeUntilDeadman.milliseconds() > DEAD_MAN_SWITCH) {
                 jumpToNextSegment = true;
+                currPoint++;
             } else if (!(target instanceof StopWayPoint) || robot.getVelocity().distToOrigin() > 2.0) {
                 timeUntilDeadman.reset();
             }
             if (target instanceof StopWayPoint) {
                 if (robotPosition.distance(target) < ((StopWayPoint) target).allowedPositionError) {
                     jumpToNextSegment = true;
+                    currPoint++;
                 }
             } else if (target instanceof PointTurnWayPoint) {
                 PointTurnWayPoint ptTarget = (PointTurnWayPoint) target;
                 if (Math.abs(robotPosition.heading - ptTarget.targetHeading) < ptTarget.allowedHeadingError) {
                     jumpToNextSegment = true;
+                    currPoint++;
                 }
             } else {
                 if (robotPosition.distance(target) < target.followDistance) {
                     jumpToNextSegment = true;
+                    currPoint++;
                 }
             }
+
+            Log.v("PP", "Index: " + currPoint);
 
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
         if (finished()) {return;}
@@ -107,7 +111,7 @@ public class PurePursuitPath {
         if (target instanceof StopWayPoint && robotPosition.distance(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
                     robotPosition, robotVelocity, target, (StopWayPoint) target));
-            System.out.println("Locking onto point " + target);
+            Log.v("PP", "Locking onto point " + target);
         } else if (target instanceof PointTurnWayPoint) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
                     robotPosition, robotVelocity, target, null));
@@ -129,18 +133,20 @@ public class PurePursuitPath {
      *            waypoint will cause the robot's heading to lock to the desired direction.
      */
     private void trackToLine(Pose robotPosition, Pose robotVelocity, WayPoint start, WayPoint end) {
-        Line currSegment = new Line(start, end);
-        Point center = currSegment.nearestLinePoint(robotPosition);
-
         Point intersection = MathUtil.lineSegmentCircleIntersection(
-                start, end, robotPosition, end.followDistance
+                start, end, robotPosition, start.followDistance
         );
 
         // If our line intersects at all
         // We clone the midpoint to preserve metadata, if it exists
         WayPoint target = end.clone();
-        target.x = intersection.x;
-        target.y = intersection.y;
+        if (intersection == null) {
+            target.x = end.x;
+            target.y = end.y;
+        } else {
+            target.x = intersection.x;
+            target.y = intersection.y;
+        }
         robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity,
                 target, end instanceof StopWayPoint ? (StopWayPoint) end : null));
     }
@@ -150,8 +156,8 @@ public class PurePursuitPath {
         double[] yPoints = new double[waypoints.size()];
 
         for (int i = 0; i < waypoints.size(); i++) {
-            xPoints[i] = waypoints.get(i).x;
-            yPoints[i] = waypoints.get(i).y;
+            xPoints[i] = waypoints.get(i).toFTCSystem().x;
+            yPoints[i] = waypoints.get(i).toFTCSystem().y;
         }
 
         return canvas.setStroke("red").setStrokeWidth(1).strokePolyline(xPoints, yPoints);

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.kurio.modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumPowers;
@@ -21,10 +22,10 @@ public class DrivetrainModule implements Module {
         bLeft = hardwareMap.dcMotor.get("bLeft");
         bRight = hardwareMap.dcMotor.get("bRight");
 
-        fLeft.setDirection(DcMotor.Direction.REVERSE);
-        bLeft.setDirection(DcMotor.Direction.REVERSE);
-        fRight.setDirection(DcMotor.Direction.FORWARD);
-        bRight.setDirection(DcMotor.Direction.FORWARD);
+        fLeft.setDirection(DcMotor.Direction.FORWARD);
+        bLeft.setDirection(DcMotor.Direction.FORWARD);
+        fRight.setDirection(DcMotor.Direction.REVERSE);
+        bRight.setDirection(DcMotor.Direction.REVERSE);
 
         powers = MecanumPowers.REST;
     }

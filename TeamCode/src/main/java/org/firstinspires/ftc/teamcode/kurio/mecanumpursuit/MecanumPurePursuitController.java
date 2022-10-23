@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.kurio.mecanumpursuit;
 
-import com.acmerobotics.dashboard.config.Config;
+import android.util.Log;
 
 import org.firstinspires.ftc.teamcode.kurio.math.MathUtil;
 import org.firstinspires.ftc.teamcode.kurio.math.Point;
@@ -9,15 +9,14 @@ import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.HeadingCont
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.StopWayPoint;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.WayPoint;
 
-//@Config
 public class MecanumPurePursuitController {
     // How far we slip if we're moving 1 in/sec (or 1 rad/sec) in each of these directions
-    public static Pose SLIP_DISTANCES = new Pose(1.5, 1.5, Math.PI / 30);
-    public static double UNDERSHOOT_DIST = 8.0; // Aim to stop 2 in away from target, and use small motions to finish it
-    public static double MIN_SLIP_SPEED = 20.0;
-    public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(12, 12, Math.PI);
-    public static Pose ONE_AWAY_POWERS = new Pose(0.10, 0.10, 0.01);
-    public static double CLOSE_EXPONENT = 1.0 / 4.0;
+    public static Pose SLIP_DISTANCES = new Pose(1.5, 0, 0);
+    public static double UNDERSHOOT_DIST = 6.0; // Aim to stop 2 in away from target, and use small motions to finish it
+    public static double MIN_SLIP_SPEED = 12.0;
+    public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(8, 8, Math.PI * 2 / 3);
+    public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.08, 0.08);
+    public static double CLOSE_EXPONENT = 1.0 / 6.0;
 
     public static Pose rDistanceToTarget(Pose robot, Point target) {
         double distance = target.minus(robot).distToOrigin();
@@ -35,13 +34,12 @@ public class MecanumPurePursuitController {
         // using a shorter look ahead distance. If finalTarget is set, we'll try to finely adjust
         // speed and slippage to hit that point. Otherwise, we'll just YEET over there.
 
-//        System.out.println("Current velocity: " + robotVelocity.toString());
-        if (finalTarget == null || robotPose.distance(finalTarget) > 18.0) {
+        Log.v("PP", "Current velocity: " + robotVelocity.toString());
+        if (finalTarget == null || robotPose.distance(finalTarget) > 12.0) {
             Pose distance = rDistanceToTarget(robotPose, target);
 
             // We negate x and y power because we want to move in the opposite direction of our error
             Pose translationPowers = distance.scale(-1).divideEachComp(GUNNING_REDUCTION_DISTANCES);
-//            System.out.println(translationPowers.toString());
 
             // Heading always wants to stop at a point, so we'll treat this the same regardless if we're
             // at a stop waypoint or a normal one. We want to rotate as less as possible to reach the desired heading.
@@ -64,11 +62,8 @@ public class MecanumPurePursuitController {
 
             // We're approaching a point, and we need to not overshoot
             Pose relVelocity = new Pose(robotVelocity.rotated(-robotPose.heading), robotVelocity.heading);
-//            System.out.println(relVelocity);
             Pose relSlipDistances = relVelocity.multiplyEachComp(SLIP_DISTANCES);
-//            System.out.println(relSlipDistances);
             Pose relAbsTarget = rDistanceToTarget(robotPose, t).add(relSlipDistances);
-//            System.out.println(relAbsTarget);
             // We negate this here so our negation in translationPowers is cancelled out
             relAbsTarget.heading = MathUtil.angleWrap(finalTarget.targetHeading - robotPose.heading - relSlipDistances.heading);
 
@@ -81,12 +76,15 @@ public class MecanumPurePursuitController {
             double angleToTarget = MathUtil.angleWrap(finalTarget.targetHeading - robotPose.heading);
 
             // Now, we're going to use the polynomial function x^1/6 to compute our powers
+
             Pose dirPowers = new Pose(
-                    -MathUtil.powKeepSign(relAbsTarget.x, CLOSE_EXPONENT),
-                    -MathUtil.powKeepSign(relAbsTarget.y, CLOSE_EXPONENT),
-                    -MathUtil.powKeepSign(angleToTarget, CLOSE_EXPONENT)
-            );
-            return new MecanumPowers(dirPowers.multiplyEachComp(ONE_AWAY_POWERS));
+                    MathUtil.powKeepSign(relAbsTarget.x, CLOSE_EXPONENT),
+                    MathUtil.powKeepSign(relAbsTarget.y, CLOSE_EXPONENT),
+                    MathUtil.powKeepSign(angleToTarget, CLOSE_EXPONENT)
+            ).scale(-1.0).multiplyEachComp(ONE_AWAY_POWERS);
+            Log.v("PP", dirPowers.toString());
+            if (dirPowers.distToOrigin() < finalTarget.allowedPositionError) return new MecanumPowers(0, 0, 0);
+            else return new MecanumPowers(dirPowers);
         }
     }
 }

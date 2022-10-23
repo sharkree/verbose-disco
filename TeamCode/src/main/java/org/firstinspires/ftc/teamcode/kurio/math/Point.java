@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.kurio.math;
 
 
+import static org.firstinspires.ftc.teamcode.kurio.math.MathUtil.angleWrap;
+
 import java.util.Locale;
 
 public class Point implements Comparable, Cloneable {
     public double x;
     public double y;
+
+    private static final float FULL_FIELD = 144.0f;
 
     public Point(double x, double y) {
         this.x = x;
@@ -63,5 +67,11 @@ public class Point implements Comparable, Cloneable {
     @Override
     public Point clone() {
         return new Point(x, y);
+    }
+
+    public Pose toFTCSystem() {
+        double x = -this.y + (FULL_FIELD / 2.);
+        double y = this.x - (FULL_FIELD / 2.);
+        return new Pose(x, y, 0);
     }
 }
