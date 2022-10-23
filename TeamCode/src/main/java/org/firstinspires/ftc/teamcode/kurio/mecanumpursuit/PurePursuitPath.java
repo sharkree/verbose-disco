@@ -7,23 +7,19 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.kurio.Robot;
-import org.firstinspires.ftc.teamcode.kurio.math.Line;
 import org.firstinspires.ftc.teamcode.kurio.math.MathUtil;
 import org.firstinspires.ftc.teamcode.kurio.math.Point;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.PointTurnWayPoint;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.StopWayPoint;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.WayPoint;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 @Config
 public class PurePursuitPath {
-    public static double TRACK_SPEED = 0.5;
-    public static double DEAD_MAN_SWITCH = 2000;
+    public static double DEAD_MAN_SWITCH = 2500;
     private final Robot robot;
     public List<WayPoint> waypoints;
 
@@ -32,10 +28,6 @@ public class PurePursuitPath {
     public int currPoint;
     boolean interrupting;
     public ElapsedTime timeUntilDeadman;
-
-    public PurePursuitPath(Robot robot, WayPoint... points) {
-        this(robot, Arrays.asList(points));
-    }
 
     public PurePursuitPath(Robot robot, List<WayPoint> waypoints) {
         // We need to deep copy our linked list so the same point doesn't get flipped multiple times
@@ -54,17 +46,17 @@ public class PurePursuitPath {
         }
     }
 
-    public void reverse() {
-        for (WayPoint w : this.waypoints) {
-            w.y = -w.y;
-
-            // We also need to invert headings.
-            if (w instanceof HeadingControlledWaypoint) {
-                HeadingControlledWaypoint hCW = (HeadingControlledWaypoint) w;
-                hCW.targetHeading = MathUtil.angleWrap(-hCW.targetHeading);
-            }
-        }
-    }
+//    public void reverse() {
+//        for (WayPoint w : this.waypoints) {
+//            w.y = -w.y;
+//
+//            // We also need to invert headings.
+//            if (w instanceof HeadingControlledWaypoint) {
+//                HeadingControlledWaypoint hCW = (HeadingControlledWaypoint) w;
+//                hCW.targetHeading = MathUtil.angleWrap(-hCW.targetHeading);
+//            }
+//        }
+//    }
 
     public void update() {
         Pose robotPosition = robot.getPose();
@@ -84,7 +76,7 @@ public class PurePursuitPath {
                 timeUntilDeadman.reset();
             }
             if (target instanceof StopWayPoint) {
-                if (robotPosition.distance(target) < ((StopWayPoint) target).allowedPositionError) {
+                if (robotPosition.distanceTo(target) < ((StopWayPoint) target).allowedPositionError) {
                     jumpToNextSegment = true;
                     currPoint++;
                 }
@@ -95,7 +87,7 @@ public class PurePursuitPath {
                     currPoint++;
                 }
             } else {
-                if (robotPosition.distance(target) < target.followDistance) {
+                if (robotPosition.distanceTo(target) < target.followDistance) {
                     jumpToNextSegment = true;
                     currPoint++;
                 }
@@ -104,22 +96,18 @@ public class PurePursuitPath {
             Log.v("PP", "Index: " + currPoint);
 
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
-        if (finished()) {return;}
+//        if (finished()) {return;}
 
         WayPoint target = waypoints.get(currPoint + 1);
         // If we're making a stop and in the stop portion of the move
-        if (target instanceof StopWayPoint && robotPosition.distance(target) < target.followDistance) {
+        if (target instanceof StopWayPoint && robotPosition.distanceTo(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
                     robotPosition, robotVelocity, target, (StopWayPoint) target));
             Log.v("PP", "Locking onto point " + target);
         } else if (target instanceof PointTurnWayPoint) {
-            robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, robotVelocity, target, null));
+            robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity, target, null));
         } else {
-            trackToLine(
-                    robotPosition, robotVelocity,
-                    waypoints.get(currPoint),
-                    waypoints.get(currPoint + 1));
+            trackToLine(robotPosition, robotVelocity, waypoints.get(currPoint), waypoints.get(currPoint + 1));
         }
     }
 
@@ -134,7 +122,7 @@ public class PurePursuitPath {
      */
     private void trackToLine(Pose robotPosition, Pose robotVelocity, WayPoint start, WayPoint end) {
         Point intersection = MathUtil.lineSegmentCircleIntersection(
-                start, end, robotPosition, start.followDistance
+                start, end, robotPosition, end.followDistance
         );
 
         // If our line intersects at all

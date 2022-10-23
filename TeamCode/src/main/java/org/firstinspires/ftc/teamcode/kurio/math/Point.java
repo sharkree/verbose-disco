@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.kurio.math;
 
 
-import static org.firstinspires.ftc.teamcode.kurio.math.MathUtil.angleWrap;
-
 import java.util.Locale;
 
 public class Point implements Comparable, Cloneable {
@@ -36,7 +34,7 @@ public class Point implements Comparable, Cloneable {
     public double distToOrigin() {
         return Math.sqrt(x * x + y * y);
     }
-    public double distance(Point p) {return minus(p).distToOrigin(); }
+    public double distanceTo(Point p) {return minus(p).distToOrigin(); }
 
     @Override
     public boolean equals(Object o) {

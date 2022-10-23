@@ -99,7 +99,7 @@ public class MathUtil {
 
         // Sort points by closeness to ul2 so closest point is at position 0
         if (intersections.size() == 2 &&
-                (intersections.get(0).distance(ul2) > intersections.get(1).distance(ul2))) {
+                (intersections.get(0).distanceTo(ul2) > intersections.get(1).distanceTo(ul2))) {
             // If it's unsorted, reverse the order
             intersections.add(intersections.remove(0));
         }

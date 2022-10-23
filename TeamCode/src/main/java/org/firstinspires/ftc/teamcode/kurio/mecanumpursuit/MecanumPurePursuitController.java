@@ -13,16 +13,17 @@ public class MecanumPurePursuitController {
     // How far we slip if we're moving 1 in/sec (or 1 rad/sec) in each of these directions
     public static Pose SLIP_DISTANCES = new Pose(1.5, 0, 0);
     public static double UNDERSHOOT_DIST = 6.0; // Aim to stop 2 in away from target, and use small motions to finish it
-    public static double MIN_SLIP_SPEED = 12.0;
-    public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(8, 8, Math.PI * 2 / 3);
-    public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.08, 0.08);
-    public static double CLOSE_EXPONENT = 1.0 / 6.0;
+    public static double MIN_SLIP_SPEED = 6.0;
+    public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(12, 12, Math.PI);
+    public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.12, 0.10);
+    public static double EXPONENT = 1.0 / 8.0;
 
     public static Pose rDistanceToTarget(Pose robot, Point target) {
         double distance = target.minus(robot).distToOrigin();
         double relAngle = robot.minus(target).atan() - robot.heading;
         double relX = distance * Math.cos(relAngle);
         double relY = distance * Math.sin(relAngle);
+
         return new Pose(relX, relY, relAngle);
     }
 
@@ -35,11 +36,11 @@ public class MecanumPurePursuitController {
         // speed and slippage to hit that point. Otherwise, we'll just YEET over there.
 
         Log.v("PP", "Current velocity: " + robotVelocity.toString());
-        if (finalTarget == null || robotPose.distance(finalTarget) > 12.0) {
+        if (finalTarget == null || robotPose.distanceTo(finalTarget) > 18.0) { // 12sqrt(2) is 16.97, but we'll round up. It will be scaled anyway at the end :)
             Pose distance = rDistanceToTarget(robotPose, target);
 
             // We negate x and y power because we want to move in the opposite direction of our error
-            Pose translationPowers = distance.scale(-1).divideEachComp(GUNNING_REDUCTION_DISTANCES);
+            Pose translationPowers = distance.negate().divideEachComp(GUNNING_REDUCTION_DISTANCES);
 
             // Heading always wants to stop at a point, so we'll treat this the same regardless if we're
             // at a stop waypoint or a normal one. We want to rotate as less as possible to reach the desired heading.
@@ -54,7 +55,7 @@ public class MecanumPurePursuitController {
             double angleToTarget = MathUtil.angleWrap(desiredAngle - robotPose.heading);
             translationPowers.heading = -angleToTarget / GUNNING_REDUCTION_DISTANCES.heading;
             return new MecanumPowers(translationPowers);
-        } else if (robotVelocity.distToOrigin() > MIN_SLIP_SPEED && robotPose.distance(finalTarget) > UNDERSHOOT_DIST) { // If we're moving more than 8 in/sec and we're close to our target
+        } else if (robotVelocity.distToOrigin() > MIN_SLIP_SPEED && robotPose.distanceTo(finalTarget) > UNDERSHOOT_DIST) { // If we're moving more than 6 in/sec and we're close to our target
             // We don't want to aim quite for our target - we want to undershoot a fair bit
             // We won't use this very often - only when we need to line up somewhere exactly. Everywhere else,
             // we'll just allow a lot of error in our stopwaypoint
@@ -67,7 +68,7 @@ public class MecanumPurePursuitController {
             // We negate this here so our negation in translationPowers is cancelled out
             relAbsTarget.heading = MathUtil.angleWrap(finalTarget.targetHeading - robotPose.heading - relSlipDistances.heading);
 
-            Pose translationPowers = relAbsTarget.scale(-1).divideEachComp(GUNNING_REDUCTION_DISTANCES);
+            Pose translationPowers = relAbsTarget.negate().divideEachComp(GUNNING_REDUCTION_DISTANCES);
             return new MecanumPowers(translationPowers);
         } else {
             // Now we just need to nudge the robot. We'll hold our heading with a simple P-loop,
@@ -75,15 +76,15 @@ public class MecanumPurePursuitController {
             Pose relAbsTarget = rDistanceToTarget(robotPose, finalTarget);
             double angleToTarget = MathUtil.angleWrap(finalTarget.targetHeading - robotPose.heading);
 
-            // Now, we're going to use the polynomial function x^1/6 to compute our powers
+            // Now, we're going to use the polynomial function x^1/8 to compute our powers
 
             Pose dirPowers = new Pose(
-                    MathUtil.powKeepSign(relAbsTarget.x, CLOSE_EXPONENT),
-                    MathUtil.powKeepSign(relAbsTarget.y, CLOSE_EXPONENT),
-                    MathUtil.powKeepSign(angleToTarget, CLOSE_EXPONENT)
-            ).scale(-1.0).multiplyEachComp(ONE_AWAY_POWERS);
+                    MathUtil.powKeepSign(relAbsTarget.x, EXPONENT),
+                    MathUtil.powKeepSign(relAbsTarget.y, EXPONENT),
+                    MathUtil.powKeepSign(angleToTarget, EXPONENT)
+            ).negate().multiplyEachComp(ONE_AWAY_POWERS);
             Log.v("PP", dirPowers.toString());
-            if (dirPowers.distToOrigin() < finalTarget.allowedPositionError) return new MecanumPowers(0, 0, 0);
+            if (robotPose.distToOrigin() < finalTarget.allowedPositionError) return MecanumPowers.REST; // might need to divide by 2
             else return new MecanumPowers(dirPowers);
         }
     }

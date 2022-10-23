@@ -14,7 +14,7 @@ import java.util.List;
 
 //@Config
 @Autonomous
-public class Amogotonomous extends LinearOpMode {
+public class AmogotonomousStraight extends LinearOpMode {
     List<WayPoint> points = WayPoint.collate(
             new WayPoint(Pose.ZERO, 8),
             new WayPoint(Pose.ZERO.x, 10, 8),

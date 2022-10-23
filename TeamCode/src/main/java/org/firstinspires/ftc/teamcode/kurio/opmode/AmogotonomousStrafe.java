@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.kurio.Robot;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.PointTurnWayPoint;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.StopWayPoint;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.WayPoint;
 
 import java.util.List;
 
 @Autonomous
-public class Amogotonomous2 extends LinearOpMode {
+public class AmogotonomousStrafe extends LinearOpMode {
     List<WayPoint> points = WayPoint.collate(
             new WayPoint(Pose.ZERO, 8),
             new WayPoint(20, 0, 8),

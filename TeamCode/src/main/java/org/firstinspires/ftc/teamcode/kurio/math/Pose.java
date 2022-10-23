@@ -43,6 +43,10 @@ public class Pose extends Point implements Cloneable {
         heading = Math.copySign(minAbs(heading, p2.heading), heading);
     }
 
+    public Pose negate() {
+        return this.scale(-1.0);
+    }
+
     public void applyFriction(Pose friction) {
         x = reduceUpToZero(x, friction.x);
         y = reduceUpToZero(y, friction.y);
