@@ -19,7 +19,7 @@ public class AmogotonomousStraight extends LinearOpMode {
             new WayPoint(Pose.ZERO, 8),
             new WayPoint(Pose.ZERO.x, 10, 8),
             new HeadingControlledWaypoint(10, 20, 8, 0),
-            new HeadingControlledWaypoint(0, 40, 3, 0),
+            new HeadingControlledWaypoint(0, 40, 6, 0),
             new StopWayPoint(Pose.ZERO.x, 40, 4, 0, 0.2)
     );
 

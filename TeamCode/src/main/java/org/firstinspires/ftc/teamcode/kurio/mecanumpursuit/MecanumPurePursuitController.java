@@ -13,9 +13,9 @@ public class MecanumPurePursuitController {
     // How far we slip if we're moving 1 in/sec (or 1 rad/sec) in each of these directions
     public static Pose SLIP_DISTANCES = new Pose(1.5, 0, 0);
     public static double UNDERSHOOT_DIST = 6.0; // Aim to stop 2 in away from target, and use small motions to finish it
-    public static double MIN_SLIP_SPEED = 6.0;
+    public static double MIN_SLIP_SPEED = 10.0;
     public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(12, 12, Math.PI);
-    public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.12, 0.10);
+    public static Pose ONE_AWAY_POWERS = new Pose(0.10, 0.15, 0.125);
     public static double EXPONENT = 1.0 / 8.0;
 
     public static Pose rDistanceToTarget(Pose robot, Point target) {
