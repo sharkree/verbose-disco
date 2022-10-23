@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumPowers;
 
 public class DrivetrainModule implements Module {
+    public static final double EPSILON = 0.03;
     private final boolean isOn = true;
 
     private MecanumPowers powers;
@@ -43,7 +44,7 @@ public class DrivetrainModule implements Module {
     }
 
     private void setMotorPower(DcMotor motor, double power) {
-        if (Math.abs(power) < 0.06) {
+        if (Math.abs(power) < EPSILON) {
             motor.setPower(0);
         } else {
             motor.setPower(power);

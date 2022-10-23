@@ -27,16 +27,20 @@ public class Pose extends Point implements Cloneable {
     public Pose add(Pose p2) {
         return new Pose(x + p2.x, y + p2.y, heading + p2.heading);
     }
+
     public Pose multiplyEachComp(Pose p2) {
         return new Pose(x * p2.x, y * p2.y, heading * p2.heading);
     }
+
     public Pose divideEachComp(Pose p2) {
         return new Pose(x / p2.x, y / p2.y, heading / p2.heading);
     }
     public Pose minus(Pose p2) {
         return new Pose(x - p2.x, y - p2.y, heading - p2.heading);
     }
+
     public Pose scale(double d) {return new Pose(x * d, y * d, heading * d);}
+
     public void clampAbs(Pose p2) {
         x = Math.copySign(minAbs(x, p2.x), x);
         y = Math.copySign(minAbs(y, p2.y), y);

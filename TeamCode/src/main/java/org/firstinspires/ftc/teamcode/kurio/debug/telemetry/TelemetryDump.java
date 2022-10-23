@@ -63,7 +63,6 @@ public class TelemetryDump implements PoseWatcher {
         TelemetryPacket packet = new TelemetryPacket();
         Canvas canvas = packet.fieldOverlay();
 
-
         path.draw(canvas);
 
         dashboard.sendTelemetryPacket(packet);

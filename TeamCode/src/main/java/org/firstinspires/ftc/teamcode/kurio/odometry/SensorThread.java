@@ -52,8 +52,6 @@ public class SensorThread implements Runnable, Telemeter {
     public List<String> getTelemetryData() {
         List<String> retVal = new ArrayList<>();
         retVal.add("Sensor thread total update time: " + updateTime);
-//        retVal.add("Position: " + odometry.getPose().toString());
-//        retVal.add("Velocity: " + odometry.getVelocity().toString());
 
         return retVal;
     }

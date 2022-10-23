@@ -63,7 +63,6 @@ public class MecanumPowers {
                 MathUtil.approxEquals(mecanumPowers.backRight, this.backRight);
     }
 
-
     /*
     %.1f----%.1f
     | Front |

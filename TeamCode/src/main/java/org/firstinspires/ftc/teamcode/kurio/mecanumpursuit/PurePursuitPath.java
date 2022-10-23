@@ -125,13 +125,12 @@ public class PurePursuitPath {
                 start, end, robotPosition, end.followDistance
         );
 
-        // If our line intersects at all
         // We clone the midpoint to preserve metadata, if it exists
         WayPoint target = end.clone();
-        if (intersection == null) {
+        if (intersection == null) { // if there wasn't an intersection, we go to the known target point
             target.x = end.x;
             target.y = end.y;
-        } else {
+        } else { // else we go to the lookahead
             target.x = intersection.x;
             target.y = intersection.y;
         }

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.kurio.opmode;
 
-//import static org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumUtil.toPowers;
-
 import static org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumUtil.toPowers;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -10,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.kurio.Robot;
 
-//@Config
 @TeleOp
 public class TestOp extends LinearOpMode {
     private Robot robot;

@@ -190,12 +190,6 @@ public class ObamaTree implements Telemeter {
         data.add("yVel: " + yVel);
         data.add("angleVel: " + angleVel);
 
-//        data.add("--");
-//
-//        data.add("lastLeft: " + lastLeftPosition);
-//        data.add("lastRight: " + lastRightPosition);
-//        data.add("lastMecanum: " + lastMecanumPosition);
-
         return data;
     }
 

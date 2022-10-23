@@ -122,5 +122,4 @@ public class Robot {
     public void setPowers(MecanumPowers powers) {
         this.drivetrainModule.setMotorPowers(powers);
     }
-
 }

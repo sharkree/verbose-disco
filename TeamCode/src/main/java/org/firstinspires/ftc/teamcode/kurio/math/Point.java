@@ -23,6 +23,7 @@ public class Point implements Comparable, Cloneable {
     public Point add(Point p) {
         return new Point(this.x + p.x, this.y + p.y);
     }
+
     public Point minus(Point p) {
         return new Point(this.x - p.x, this.y - p.y);
     }
@@ -34,6 +35,7 @@ public class Point implements Comparable, Cloneable {
     public double distToOrigin() {
         return Math.sqrt(x * x + y * y);
     }
+
     public double distanceTo(Point p) {return minus(p).distToOrigin(); }
 
     @Override

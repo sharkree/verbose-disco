@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.kurio.math;
 
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class MathUtil {
 
     public static double powKeepSign(double d, double power) {
         // In case d is super small, just make it zero
-        if (Math.abs(d) < 1e-14) {
+        if (Math.abs(d) < 1e-12) {
             return 0;
         }
         return Math.copySign(Math.pow(Math.abs(d), power), d);

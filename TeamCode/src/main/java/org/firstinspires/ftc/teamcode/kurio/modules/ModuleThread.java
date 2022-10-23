@@ -14,8 +14,6 @@ public class ModuleThread implements Runnable, Telemeter {
     private final Robot robot;
     private final Module[] modules;
 
-    private boolean started = false;
-
     private long updateDuration = 0;
     private Map<String, Long> moduleUpdateTimes;
 
