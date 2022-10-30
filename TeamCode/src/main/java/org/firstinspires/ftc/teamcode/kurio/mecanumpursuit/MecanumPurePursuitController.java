@@ -35,7 +35,16 @@ public class MecanumPurePursuitController {
         // using a shorter look ahead distance. If finalTarget is set, we'll try to finely adjust
         // speed and slippage to hit that point. Otherwise, we'll just YEET over there.
 
+        Log.v("PP", "COPE BUCKET data:");
+        Log.v("PP", "Current Pose: " + robotPose.toString());
         Log.v("PP", "Current velocity: " + robotVelocity.toString());
+        Log.v("PP", "Current Target: " + target.toString());
+        if (finalTarget != null) {
+            Log.v("PP", "Final Target: " + finalTarget.toString());
+        } else {
+            Log.v("PP", "Final Target: null");
+        }
+
         if (finalTarget == null || robotPose.distanceTo(finalTarget) > 18.0) { // 12sqrt(2) is 16.97, but we'll round up. It will be scaled anyway at the end :)
             Pose distance = rDistanceToTarget(robotPose, target);
 
