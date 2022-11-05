@@ -41,12 +41,6 @@ public class Pose extends Point implements Cloneable {
 
     public Pose scale(double d) {return new Pose(x * d, y * d, heading * d);}
 
-    public void clampAbs(Pose p2) {
-        x = Math.copySign(minAbs(x, p2.x), x);
-        y = Math.copySign(minAbs(y, p2.y), y);
-        heading = Math.copySign(minAbs(heading, p2.heading), heading);
-    }
-
     public Pose negate() {
         return this.scale(-1.0);
     }

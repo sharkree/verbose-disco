@@ -23,7 +23,7 @@ import java.util.List;
 @Config
 public class PurePursuitPath {
     public static final double MIN_DISTANCE = 2.0;
-    public static double DEAD_MAN_SWITCH = 2500;
+    public static double DEAD_MAN_SWITCH = 1000;
     private final Robot robot;
     public List<WayPoint> waypoints;
 
@@ -51,7 +51,7 @@ public class PurePursuitPath {
     }
 
     public void update() {
-        Pose robotPosition = robot.getPose();
+        Pose robotPosition = robot.getPose().clone();
         Pose robotVelocity = robot.getVelocity();
 
         // Check whether we should advance to the next piece of the curve
@@ -61,6 +61,7 @@ public class PurePursuitPath {
             WayPoint target = waypoints.get(currPoint + 1);
 
             // Stop waypoint deadman switch
+
             if (target instanceof StopWayPoint && timeUntilDeadman.milliseconds() > DEAD_MAN_SWITCH) {
                 jumpToNextSegment = true;
                 currPoint++;
@@ -85,22 +86,19 @@ public class PurePursuitPath {
                     currPoint++;
                 }
             }
-
-            Log.v("PP", "Index: " + currPoint);
-
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
-//        if (finished()) {return;}
+        if (finished()) {return;}
 
         WayPoint target = waypoints.get(min(currPoint + 1, waypoints.size() - 1));
         // If we're making a stop and in the stop portion of the move
         if (target instanceof StopWayPoint && robotPosition.distanceTo(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, robotVelocity, target, (StopWayPoint) target));
+                    robot.getPose(), robotVelocity, target, (StopWayPoint) target));
             Log.v("PP", "Locking onto point " + target);
         } else if (target instanceof PointTurnWayPoint) {
-            robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity, target, null));
+            robot.setPowers(MecanumPurePursuitController.goToPosition(robot.getPose(), robotVelocity, target, null));
         } else {
-            trackToLine(robotPosition, robotVelocity, waypoints.get(currPoint), target);
+            trackToLine(robot.getPose(), robotVelocity, waypoints.get(currPoint), target);
         }
     }
 

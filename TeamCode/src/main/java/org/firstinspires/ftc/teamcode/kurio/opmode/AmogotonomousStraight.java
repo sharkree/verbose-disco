@@ -17,19 +17,18 @@ import java.util.List;
 public class AmogotonomousStraight extends LinearOpMode {
     List<WayPoint> points = WayPoint.collate(
             new HeadingControlledWaypoint(Pose.ZERO, 8),
-            new HeadingControlledWaypoint(Pose.ZERO.x, 20, 8, 0),
+            new HeadingControlledWaypoint(5, 20, 4, 0),
 //            new HeadingControlledWaypoint(10, 20, 8, 0),
 //            new HeadingControlledWaypoint(0, 40, 6, 0),
-            new StopWayPoint(Pose.ZERO.x, 40, 4, 0, 0.2)
+            new StopWayPoint(0, 40, 8, 0, 0.2)
     );
 
     @Override
     public void runOpMode() {
         Robot robit = new Robot(this);
 
-        PurePursuitPath followPath = new PurePursuitPath(robit, points);
-
         waitForStart();
+        PurePursuitPath followPath = new PurePursuitPath(robit, points);
 
         while (!followPath.finished()) {
             robit.getTelemetryDump().sendPath(followPath);
