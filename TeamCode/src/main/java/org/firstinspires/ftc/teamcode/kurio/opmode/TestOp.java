@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.kurio.opmode;
 
-import static org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumUtil.toPowers;
+import static org.firstinspires.ftc.teamcode.kurio.purepursuit.MecanumUtil.toPowers;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 

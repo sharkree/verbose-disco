@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.kurio.modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumPowers;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.MecanumPowers;
 
 public class DrivetrainModule implements Module {
     public static final double EPSILON = 0.03;

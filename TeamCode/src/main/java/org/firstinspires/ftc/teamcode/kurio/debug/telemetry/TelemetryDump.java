@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode.kurio.debug.telemetry;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.PurePursuitPath;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.PurePursuitPath;
 
 import java.util.ArrayList;
 import java.util.List;

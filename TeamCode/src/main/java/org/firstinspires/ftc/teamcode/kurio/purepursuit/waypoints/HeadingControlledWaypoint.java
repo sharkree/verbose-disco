@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints;
+package org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints;
 
 import androidx.annotation.NonNull;
 

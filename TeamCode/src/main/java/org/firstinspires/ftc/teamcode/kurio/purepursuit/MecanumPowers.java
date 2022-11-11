@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.kurio.mecanumpursuit;
+package org.firstinspires.ftc.teamcode.kurio.purepursuit;
 
 import org.firstinspires.ftc.teamcode.kurio.math.MathUtil;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;

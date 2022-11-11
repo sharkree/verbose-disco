@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.kurio.Robot;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.StopWayPoint;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.WayPoint;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.PurePursuitPath;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.StopWayPoint;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.WayPoint;
 
 import java.util.List;
 

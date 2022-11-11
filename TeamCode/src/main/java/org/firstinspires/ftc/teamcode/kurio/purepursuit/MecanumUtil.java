@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.kurio.mecanumpursuit;
+package org.firstinspires.ftc.teamcode.kurio.purepursuit;
 
 
 import com.qualcomm.robotcore.util.Range;

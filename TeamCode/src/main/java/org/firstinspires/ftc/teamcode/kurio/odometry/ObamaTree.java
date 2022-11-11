@@ -43,6 +43,8 @@ public class ObamaTree implements Telemeter {
     private static final double LR_ENCODER_DIST_FROM_CENTER = 2.458156297;
     private static final double M_ENCODER_DIST_FROM_CENTER = 2.99436825322;
 
+    private final Object lock = new Object();
+
     public ObamaTree(HardwareMap hardwareMap, Pose pose) {
         worldX = pose.x;
         worldY = pose.y;
@@ -169,7 +171,9 @@ public class ObamaTree implements Telemeter {
     }
 
     public Pose getPose() {
-        return new Pose(worldX, worldY, worldHeadingRad);
+        synchronized (lock) {
+            return new Pose(worldX, worldY, worldHeadingRad);
+        }
     }
 
     public Pose getVelocity() {

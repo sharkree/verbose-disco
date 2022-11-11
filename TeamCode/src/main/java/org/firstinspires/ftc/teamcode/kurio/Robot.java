@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.kurio.debug.DebugThread;
 import org.firstinspires.ftc.teamcode.kurio.debug.telemetry.TelemetryDump;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
 import org.firstinspires.ftc.teamcode.kurio.odometry.SensorThread;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.MecanumPowers;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.MecanumPowers;
 import org.firstinspires.ftc.teamcode.kurio.modules.DrivetrainModule;
 import org.firstinspires.ftc.teamcode.kurio.modules.Module;
 import org.firstinspires.ftc.teamcode.kurio.modules.ModuleThread;

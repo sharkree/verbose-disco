@@ -1,17 +1,17 @@
-package org.firstinspires.ftc.teamcode.kurio.mecanumpursuit;
+package org.firstinspires.ftc.teamcode.kurio.purepursuit;
 
 import android.util.Log;
 
 import org.firstinspires.ftc.teamcode.kurio.math.MathUtil;
 import org.firstinspires.ftc.teamcode.kurio.math.Point;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.HeadingControlledWaypoint;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.StopWayPoint;
-import org.firstinspires.ftc.teamcode.kurio.mecanumpursuit.waypoints.WayPoint;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.HeadingControlledWaypoint;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.StopWayPoint;
+import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.WayPoint;
 
 public class MecanumPurePursuitController {
     // How far we slip if we're moving 1 in/sec (or 1 rad/sec) in each of these directions
-    public static Pose SLIP_DISTANCES = new Pose(0.5, 0, 0);
+    public static Pose SLIP_DISTANCES = new Pose(1.5, 0, 0);
     public static double UNDERSHOOT_DIST = 6.0; // Aim to stop 2 in away from target, and use small motions to finish it
     public static double MIN_SLIP_SPEED = 8.0;
     public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(12, 12, Math.PI);
@@ -48,11 +48,10 @@ public class MecanumPurePursuitController {
         if (finalTarget == null || robotPose.distanceTo(finalTarget) > 18.0) {
             Pose distance = rDistanceToTarget(robotPose, target);
 
-            // We negate x and y power because we want to move in the opposite direction of our error
             Pose translationPowers = distance.divideEachComp(GUNNING_REDUCTION_DISTANCES);
+            Log.v("Translation Powers", translationPowers.toString());
 
-            // Heading always wants to stop at a point, so we'll treat this the same regardless if we're
-            // at a stop waypoint or a normal one. We want to rotate as less as possible to reach the desired heading.
+            // We want to rotate as less as possible to reach the desired heading.
             double forwardAngle = target.minus(robotPose).atan();
             double backwardAngle = forwardAngle + Math.PI;
             double angleToForward = MathUtil.angleWrap(forwardAngle - robotPose.heading);
@@ -66,18 +65,21 @@ public class MecanumPurePursuitController {
             return new MecanumPowers(translationPowers);
         } else if (robotVelocity.distToOrigin() > MIN_SLIP_SPEED && robotPose.distanceTo(finalTarget) > UNDERSHOOT_DIST) { // If we're moving more than 6 in/sec and we're close to our target
             // We don't want to aim quite for our target - we want to undershoot a fair bit
-            // We won't use this very often - only when we need to line up somewhere exactly. Everywhere else,
-            // we'll just allow a lot of error in our stopwaypoint
             Point t = MathUtil.lineSegmentCircleIntersection(robotPose, finalTarget, finalTarget, UNDERSHOOT_DIST);
 
             // We're approaching a point, and we need to not overshoot
+//            Pose relVelocity = new Pose(robotVelocity.rotated(-robotPose.heading), robotVelocity.heading);
             Pose relVelocity = new Pose(robotVelocity.rotated(-robotPose.heading), robotVelocity.heading);
             Pose relSlipDistances = relVelocity.multiplyEachComp(SLIP_DISTANCES);
             Pose relAbsTarget = rDistanceToTarget(robotPose, t).add(relSlipDistances);
-            // We negate this here so our negation in translationPowers is cancelled out
+            Log.v("relVelocity", relVelocity.toString());
+            Log.v("relSlipDistances", relSlipDistances.toString());
+            Log.v("relAbsTarget", relAbsTarget.toString());
+
             relAbsTarget.heading = MathUtil.angleWrap(finalTarget.targetHeading - robotPose.heading - relSlipDistances.heading);
 
             Pose translationPowers = relAbsTarget.divideEachComp(GUNNING_REDUCTION_DISTANCES);
+            Log.v("Translational Powers", translationPowers.toString());
             return new MecanumPowers(translationPowers);
         } else {
             // Now we just need to nudge the robot. We'll hold our heading with a simple P-loop,
@@ -90,11 +92,11 @@ public class MecanumPurePursuitController {
             Pose dirPowers = new Pose(
                     MathUtil.powKeepSign(relAbsTarget.x, EXPONENT),
                     MathUtil.powKeepSign(relAbsTarget.y, EXPONENT),
-                    MathUtil.powKeepSign(angleToTarget, EXPONENT)
-            ).multiplyEachComp(ONE_AWAY_POWERS);
+                    -MathUtil.powKeepSign(angleToTarget, EXPONENT)
+            );
             Log.v("PP", dirPowers.toString());
-            if (robotPose.distToOrigin() < finalTarget.allowedPositionError) return MecanumPowers.REST; // might need to divide by 2
-            else return new MecanumPowers(dirPowers);
+            if (robotPose.distToOrigin() < finalTarget.allowedPositionError) return MecanumPowers.REST;
+            else return new MecanumPowers(dirPowers.multiplyEachComp(ONE_AWAY_POWERS));
         }
     }
 }
