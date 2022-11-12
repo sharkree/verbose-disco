@@ -16,11 +16,11 @@ import java.util.List;
 @Autonomous
 public class AmogotonomousStraight extends LinearOpMode {
     List<WayPoint> points = WayPoint.collate(
-            new HeadingControlledWaypoint(Pose.ZERO, 6),
-            new HeadingControlledWaypoint(5, 20, 7, 0),
+            new HeadingControlledWaypoint(Pose.ZERO, 4),
+            new HeadingControlledWaypoint(-5, 20, 4, 0),
 //            new HeadingControlledWaypoint(10, 20, 8, 0),
 //            new HeadingControlledWaypoint(0, 40, 6, 0),
-            new StopWayPoint(8, 40, 8, Math.PI / 2, 0.2)
+            new StopWayPoint(20, 40, 4, 0, 1.0)
     );
 
     @Override

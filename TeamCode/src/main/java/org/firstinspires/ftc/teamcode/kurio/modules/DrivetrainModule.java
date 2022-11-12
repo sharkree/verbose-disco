@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.kurio.modules;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -32,6 +34,7 @@ public class DrivetrainModule implements Module {
 
     @Override
     public void update() {
+        Log.v("Motor Powers", powers.toString());
         setMotorPower(fLeft, powers.frontLeft);
         setMotorPower(fRight, powers.frontRight);
         setMotorPower(bLeft, powers.backLeft);

@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.WayPoint;
 
 public class MecanumPurePursuitController {
     // How far we slip if we're moving 1 in/sec (or 1 rad/sec) in each of these directions
-    public static Pose SLIP_DISTANCES = new Pose(1.5, 0, 0);
+    public static Pose SLIP_DISTANCES = new Pose(0.5, 0.0, 0.0);
     public static double UNDERSHOOT_DIST = 6.0; // Aim to stop 2 in away from target, and use small motions to finish it
     public static double MIN_SLIP_SPEED = 8.0;
     public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(12, 12, Math.PI);
-    public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.12, 0.1);
+    public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.12, 0.10);
     public static double EXPONENT = 1.0 / 6.0;
 
     public static Pose rDistanceToTarget(Pose robot, Point target) {
@@ -64,7 +64,7 @@ public class MecanumPurePursuitController {
             translationPowers.heading = angleToTarget / GUNNING_REDUCTION_DISTANCES.heading;
             return new MecanumPowers(translationPowers);
         } else if (robotVelocity.distToOrigin() > MIN_SLIP_SPEED && robotPose.distanceTo(finalTarget) > UNDERSHOOT_DIST) { // If we're moving more than 6 in/sec and we're close to our target
-            // We don't want to aim quite for our target - we want to undershoot a fair bit
+            // We don't want to aim quite for our target, we want to undershoot a fair bit
             Point t = MathUtil.lineSegmentCircleIntersection(robotPose, finalTarget, finalTarget, UNDERSHOOT_DIST);
 
             // We're approaching a point, and we need to not overshoot
