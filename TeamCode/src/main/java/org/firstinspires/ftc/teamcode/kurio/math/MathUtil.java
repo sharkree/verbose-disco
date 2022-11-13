@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.kurio.math;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class MathUtil {
     public static final double EPSILON = 1e-6;
 
@@ -68,46 +65,32 @@ public class MathUtil {
         }
     }
 
-    public static Point lineSegmentCircleIntersection(Point ul1, Point ul2, Point o, double radius) {
-        Point l1 = new Point(ul1.x - o.x, ul1.y - o.y);
-        Point l2 = new Point(ul2.x - o.x, ul2.y - o.y);
+    public static Point lineSegmentCircleIntersection(Point pointA, Point pointB, Point center, double radius) {
+        double baX = pointB.x - pointA.x;
+        double baY = pointB.y - pointA.y;
+        double caX = center.x - pointA.x;
+        double caY = center.y - pointA.y;
 
-        double d_x = l2.x - l1.x;
-        double d_y = l2.y - l1.y;
-        double d_r = Math.hypot(d_x, d_y);
-        double determinant = l1.x * l2.y - l2.x * l1.y;
-        double discriminant = Math.pow(radius, 2) * Math.pow(d_r, 2) - Math.pow(determinant, 2);
+        double a = baX * baX + baY * baY;
+        double bBy2 = baX * caX + baY * caY;
+        double c = caX * caX + caY * caY - radius * radius;
 
-        List<Point> offsets = new LinkedList<>();
-        if (MathUtil.approxEquals(discriminant, 0)) {
-            offsets.add(new Point(0, 0));
-        } else if (discriminant > 0) {
-            double x_determinant = sign(d_y) * d_x * Math.sqrt(discriminant);
-            double y_determinant = Math.abs(d_y) * Math.sqrt(discriminant);
-            offsets.add(new Point(x_determinant, y_determinant));
-            offsets.add(new Point(-x_determinant, -y_determinant));
-        }
+        double pBy2 = bBy2 / a;
+        double q = c / a;
 
-        List<Point> intersections = new LinkedList<>();
-        for (Point offset : offsets) {
-            intersections.add(new Point (
-                    (determinant * d_y + offset.x) / Math.pow(d_r, 2) + o.x,
-                    (-determinant * d_x + offset.y) / Math.pow(d_r, 2) + o.y
-            ));
-        }
+        double disc = pBy2 * pBy2 - q;
+        if (disc < 0) return null;
+        // if disc == 0 ... dealt with later
+        double tmpSqrt = Math.sqrt(disc);
+        double abScalingFactor1 = -pBy2 + tmpSqrt;
+        double abScalingFactor2 = -pBy2 - tmpSqrt;
 
-        // Sort points by closeness to ul2 so closest point is at position 0
-        if (intersections.size() == 2 &&
-                (intersections.get(0).distanceTo(ul2) > intersections.get(1).distanceTo(ul2))) {
-            // If it's unsorted, reverse the order
-            intersections.add(intersections.remove(0));
-        }
-
-        if (intersections.size() > 0) {
-            return intersections.get(0);
-        } else {
-            return null;
-        }
+        Point p1 = new Point(pointA.x - baX * abScalingFactor1, pointA.y
+                - baY * abScalingFactor1);
+        if (disc == 0) return p1;
+        Point p2 = new Point(pointA.x - baX * abScalingFactor2, pointA.y
+                - baY * abScalingFactor2);
+        return p1.distanceTo(pointA) < p2.distanceTo(pointA) ? p1 : p2;
     }
 
     private static int sign(double n) {

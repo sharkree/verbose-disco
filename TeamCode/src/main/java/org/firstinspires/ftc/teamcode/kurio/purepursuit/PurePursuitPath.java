@@ -18,7 +18,7 @@ import java.util.List;
 
 @Config
 public class PurePursuitPath {
-    public static final double MIN_VELOCITY = 1.0;
+    public static double MIN_VELOCITY = 1.0;
     public static double STOP_SWITCH = 1000;
     private final Robot robot;
     public List<WayPoint> waypoints;

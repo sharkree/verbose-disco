@@ -24,10 +24,10 @@ public class MecanumPowers {
     }
 
     public MecanumPowers(double x, double y, double turnPower) {
-        this.frontLeft = y + turnPower + x;
-        this.backLeft = y + turnPower - x;
-        this.frontRight = y - turnPower - x;
-        this.backRight = y - turnPower + x;
+        this.frontLeft = y - turnPower - x;
+        this.backLeft = y - turnPower + x;
+        this.frontRight = y + turnPower + x;
+        this.backRight = y + turnPower - x;
 
         this.scale();
     }
@@ -73,12 +73,12 @@ public class MecanumPowers {
     @Override
     public String toString() {
         return String.format(Locale.US,
-                "\n" +
-                        "(%.1f)---(%.1f)\n" +
+                "\n\n" +
+                        "(%.3f)---(%.3f)\n" +
                         "|   Front   |\n" +
                         "|           |\n" +
                         "|           |\n" +
-                        "(%.1f)---(%.1f)\n"
+                        "(%.3f)---(%.3f)\n"
                 , frontLeft, frontRight, backLeft, backRight);
     }
 }

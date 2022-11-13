@@ -14,18 +14,18 @@ import java.util.List;
 
 //@Config
 @Autonomous
-public class AmogotonomousStraight extends LinearOpMode {
+public class Test1 extends LinearOpMode {
     List<WayPoint> points = WayPoint.collate(
-            new HeadingControlledWaypoint(Pose.ZERO, 4),
-            new HeadingControlledWaypoint(-5, 20, 4, 0),
+            new WayPoint(new Pose(0, 0, 0), 8),
+//            new HeadingControlledWaypoint(-5, 20, 4, 0),
 //            new HeadingControlledWaypoint(10, 20, 8, 0),
 //            new HeadingControlledWaypoint(0, 40, 6, 0),
-            new StopWayPoint(20, 40, 4, 0, 1.0)
+            new StopWayPoint(0, 48, 8, 0, 1.0)
     );
 
     @Override
     public void runOpMode() {
-        Robot robit = new Robot(this);
+        Robot robit = new Robot(this, new Pose(0, 0, 0));
 
         waitForStart();
         PurePursuitPath followPath = new PurePursuitPath(robit, points);
@@ -34,6 +34,12 @@ public class AmogotonomousStraight extends LinearOpMode {
             robit.getTelemetryDump().sendPath(followPath);
 
             followPath.update();
+
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

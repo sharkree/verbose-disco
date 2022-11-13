@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.kurio.odometry;
 
 import android.os.SystemClock;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.kurio.math.Pose;
 
 import java.util.ArrayList;
 
+@Config
 public class ObamaTree implements Telemeter {
     // Encoders
     private final DcMotor yLeftEncoder;
@@ -39,9 +41,9 @@ public class ObamaTree implements Telemeter {
     private double lastUpdateTime = 0;
 
     // Constants
-    private static final double INCHES_PER_ENCODER_TICK = 0.00071423524;
-    private static final double LR_ENCODER_DIST_FROM_CENTER = 2.458156297;
-    private static final double M_ENCODER_DIST_FROM_CENTER = 2.99436825322;
+    public static double INCHES_PER_ENCODER_TICK = 0.00076699039;
+    public static double LR_ENCODER_DIST_FROM_CENTER = 7.025;
+    public static double M_ENCODER_DIST_FROM_CENTER = 8;
 
     private final Object lock = new Object();
 
@@ -66,9 +68,9 @@ public class ObamaTree implements Telemeter {
     }
 
     private void calculatePosition() {
-        double newLeftPosition = yLeftEncoder.getCurrentPosition();
-        double newRightPosition = yRightEncoder.getCurrentPosition();
-        double newMecanumPosition = mecanumEncoder.getCurrentPosition();
+        double newLeftPosition = -yLeftEncoder.getCurrentPosition();
+        double newRightPosition = -yRightEncoder.getCurrentPosition();
+        double newMecanumPosition = -mecanumEncoder.getCurrentPosition();
 
         double deltaLeftPosition = newLeftPosition - lastLeftPosition;
         double deltaRightPosition = newRightPosition - lastRightPosition;

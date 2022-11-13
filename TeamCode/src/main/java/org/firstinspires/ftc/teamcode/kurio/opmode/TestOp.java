@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.kurio.Robot;
+import org.firstinspires.ftc.teamcode.kurio.math.Pose;
 
 @TeleOp
 public class TestOp extends LinearOpMode {
@@ -13,7 +14,7 @@ public class TestOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot = new Robot(this);
+        robot = new Robot(this, new Pose(0, 0, 0));
 
         waitForStart();
 

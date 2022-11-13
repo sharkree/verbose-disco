@@ -30,7 +30,7 @@ public class Robot {
     // electronics
     private final LynxModule controlHub;
 
-    public Robot(LinearOpMode linearOpMode) {
+    public Robot(LinearOpMode linearOpMode, Pose pose) {
         this.linearOpMode = linearOpMode;
 
         this.telemetryDump = new TelemetryDump(linearOpMode.telemetry);
@@ -51,7 +51,7 @@ public class Robot {
         // threads
         debugThread = new DebugThread(this);
         moduleThread = new ModuleThread(this, modules);
-        sensorThread = new SensorThread(this);
+        sensorThread = new SensorThread(this, pose);
 
         this.start();
     }

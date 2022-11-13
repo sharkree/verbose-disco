@@ -10,6 +10,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 
 import org.firstinspires.ftc.teamcode.kurio.Robot;
 import org.firstinspires.ftc.teamcode.kurio.debug.telemetry.Telemeter;
+import org.firstinspires.ftc.teamcode.kurio.math.Pose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,9 @@ public class SensorThread implements Runnable, Telemeter {
     private long updateTime = 0;
     private long lastLoopTime = 0;
 
-    public SensorThread(Robot robot) {
+    public SensorThread(Robot robot, Pose pose) {
         this.robot = robot;
-        this.odometry = new ObamaTree(robot.getHardwareMap());
+        this.odometry = new ObamaTree(robot.getHardwareMap(), pose);
         robot.getTelemetryDump().registerTelemeter(this);
         robot.getTelemetryDump().registerTelemeter(odometry);
     }
