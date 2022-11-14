@@ -79,7 +79,9 @@ public class MathUtil {
         double q = c / a;
 
         double disc = pBy2 * pBy2 - q;
-        if (disc < 0) return null;
+        // If there are any cases where disc is very small but negative(ex. -1.17e16), we need to set it to zero
+        if (disc < 0 && Math.abs(disc) > EPSILON) return null;
+        else if (Math.abs(disc) < EPSILON) disc = 0;
         // if disc == 0 ... dealt with later
         double tmpSqrt = Math.sqrt(disc);
         double abScalingFactor1 = -pBy2 + tmpSqrt;
