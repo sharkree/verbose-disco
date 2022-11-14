@@ -92,7 +92,7 @@ public class MathUtil {
         if (disc == 0) return p1;
         Point p2 = new Point(pointA.x - baX * abScalingFactor2, pointA.y
                 - baY * abScalingFactor2);
-        return p1.distanceTo(pointA) < p2.distanceTo(pointA) ? p1 : p2;
+        return p1.distanceTo(pointB) < p2.distanceTo(pointB) ? p1 : p2;
     }
 
     private static int sign(double n) {

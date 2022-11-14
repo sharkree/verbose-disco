@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.kurio.Robot;
+import org.firstinspires.ftc.teamcode.kurio.math.Line;
 import org.firstinspires.ftc.teamcode.kurio.math.MathUtil;
 import org.firstinspires.ftc.teamcode.kurio.math.Point;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
@@ -99,18 +100,18 @@ public class PurePursuitPath {
      *            waypoint will cause the robot's heading to lock to the desired direction.
      */
     private void trackToLine(Pose robotPosition, Pose robotVelocity, WayPoint start, WayPoint end) {
-//        Line currSegment = new Line(start, end);
-//        Point center = currSegment.nearestLinePoint(robotPosition);
+        Line currSegment = new Line(start, end);
+        Point center = currSegment.nearestLinePoint(robotPosition);
 
         Point intersection = MathUtil.lineSegmentCircleIntersection(
-                start, end, robotPosition, end.followDistance
+                start, end, center, end.followDistance
         );
 
         WayPoint target = end.clone();
-        if (intersection != null) { // if there wasn't an intersection, we go to the known target point
+//        if (intersection != null) { // if there wasn't an intersection, we go to the known target point
             target.x = intersection.x;
             target.y = intersection.y;
-        }
+//        }
 
         if (end instanceof StopWayPoint) robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity, target, (StopWayPoint) end));
         else robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity, target, null));
