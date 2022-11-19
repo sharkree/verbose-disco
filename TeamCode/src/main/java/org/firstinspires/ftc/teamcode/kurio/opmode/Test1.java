@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.kurio.Robot;
 import org.firstinspires.ftc.teamcode.kurio.math.Pose;
 import org.firstinspires.ftc.teamcode.kurio.purepursuit.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.StopWayPoint;
 import org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints.WayPoint;
 
@@ -17,10 +16,11 @@ import java.util.List;
 public class Test1 extends LinearOpMode {
     List<WayPoint> points = WayPoint.collate(
             new WayPoint(new Pose(0, 0, 0), 8),
+            new StopWayPoint(0, 36, 8, 0, 0.5)
 //            new HeadingControlledWaypoint(-5, 20, 4, 0),
 //            new HeadingControlledWaypoint(10, 20, 8, 0),
 //            new HeadingControlledWaypoint(0, 40, 6, 0),
-            new StopWayPoint(0, 48, 8, 0, 1.0)
+//            new StopWayPoint(0, 48, 8, 0, 1.0)
     );
 
     @Override

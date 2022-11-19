@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.kurio.purepursuit.waypoints;
 
 import androidx.annotation.NonNull;
 
-public class StopWayPoint extends HeadingControlledWaypoint {
+public class StopWayPoint extends HeadingControlledWayPoint {
     public double allowedPositionError;
 
     public StopWayPoint(double x, double y, double followDistance, double targetHeading, double allowedPositionError) {

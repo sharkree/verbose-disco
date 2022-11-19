@@ -50,6 +50,11 @@ public class MecanumPowers {
             this.backLeft /= absMax;
             this.backRight /= absMax;
         }
+
+//        if (this.frontLeft < 0.06) this.frontLeft = 0;
+//        if (this.frontRight < 0.06) this.frontRight = 0;
+//        if (this.backLeft < 0.06) this.backLeft = 0;
+//        if (this.backRight < 0.06) this.backRight= 0;
     }
 
     @Override

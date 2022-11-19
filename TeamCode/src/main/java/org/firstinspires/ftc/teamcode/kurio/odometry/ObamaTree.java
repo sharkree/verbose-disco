@@ -68,8 +68,8 @@ public class ObamaTree implements Telemeter {
     }
 
     private void calculatePosition() {
-        double newLeftPosition = -yLeftEncoder.getCurrentPosition();
-        double newRightPosition = -yRightEncoder.getCurrentPosition();
+        double newLeftPosition = yLeftEncoder.getCurrentPosition();
+        double newRightPosition = yRightEncoder.getCurrentPosition();
         double newMecanumPosition = -mecanumEncoder.getCurrentPosition();
 
         double deltaLeftPosition = newLeftPosition - lastLeftPosition;
@@ -195,6 +195,12 @@ public class ObamaTree implements Telemeter {
         data.add("xVel: " + xVel);
         data.add("yVel: " + yVel);
         data.add("angleVel: " + angleVel);
+
+        data.add("--");
+
+        data.add("last left: " + lastLeftPosition);
+        data.add("last right: " + lastRightPosition);
+        data.add("last mecanum: " + lastMecanumPosition);
 
         return data;
     }

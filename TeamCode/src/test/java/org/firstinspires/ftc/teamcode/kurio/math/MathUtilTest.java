@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.kurio.math;
 
+import static org.firstinspires.ftc.teamcode.kurio.math.MathUtil.angleWrap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -14,7 +15,7 @@ class MathUtilTest {
         int radius = 2;
 
         // Horizontal line that intercepts
-        Point interceptH1 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptH1 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(0, 3),
                 new Point(6, 3),
                 center,
@@ -24,7 +25,7 @@ class MathUtilTest {
         assertEquals(3.0, interceptH1.y,  MathUtil.EPSILON);
 
         // Horizontal line that does not intercept
-        Point interceptH2 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptH2 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(0, 1),
                 new Point(6, 1),
                 center,
@@ -32,7 +33,7 @@ class MathUtilTest {
         assertNull(interceptH2);
 
         // Horizontal line cross over
-        Point interceptH3 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptH3 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(0, 4),
                 new Point(6, 4),
                 center,
@@ -41,7 +42,7 @@ class MathUtilTest {
         assertEquals(4.0, interceptH3.y,  MathUtil.EPSILON);
 
         // Vertical line that intercepts
-        Point interceptV1 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptV1 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(3, 0),
                 new Point(3, 6),
                 center,
@@ -51,7 +52,7 @@ class MathUtilTest {
         assertEquals(5.0, interceptV1.y, MathUtil.EPSILON);
 
         // Vertical line that does not intercept
-        Point interceptV2 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptV2 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(1, 0),
                 new Point(1, 6),
                 center,
@@ -59,7 +60,7 @@ class MathUtilTest {
         assertNull(interceptV2);
 
         // Vertical line that does not intercept
-        Point interceptV3 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptV3 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(10, 0),
                 new Point(10, 6),
                 center,
@@ -67,7 +68,7 @@ class MathUtilTest {
         assertNull(interceptV3);
 
         // Vertical line that falls short
-        Point interceptV4 = MathUtil.lineSegmentCircleIntersection(
+        Point interceptV4 = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(3, 0),
                 new Point(3, 3),
                 center,
@@ -80,12 +81,21 @@ class MathUtilTest {
         double angle = Math.PI / 4.0 - Math.asin(2.0 / Math.sqrt(50));
         double xt = len * Math.cos(angle);
         double yt = len * Math.sin(angle);
-        Point intercept = MathUtil.lineSegmentCircleIntersection(
+        Point intercept = MathUtil.lineSegmentCircleIntersectionFar(
                 new Point(0, 0),
                 new Point(xt, yt),
                 center,
                 radius);
         assertEquals(xt, intercept.x, MathUtil.EPSILON);
         assertEquals(yt, intercept.y, MathUtil.EPSILON);
+    }
+
+    @Test
+    void angleWrapTest() {
+        double one = Math.PI;
+        assertEquals(Math.PI, angleWrap(one));
+
+        double two = -Math.PI;
+        assertEquals(-Math.PI, angleWrap(two));
     }
 }

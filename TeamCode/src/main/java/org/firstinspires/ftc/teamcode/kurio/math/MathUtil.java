@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.kurio.math;
 
 public class MathUtil {
     public static final double EPSILON = 1e-6;
+    public static final double HIGH_EPSILON = 1e-2;
 
     public static double angleWrap(double angle) {
         double tmp = angle % (Math.PI * 2);
@@ -65,7 +66,7 @@ public class MathUtil {
         }
     }
 
-    public static Point lineSegmentCircleIntersection(Point pointA, Point pointB, Point center, double radius) {
+    public static Point lineSegmentCircleIntersectionFar(Point pointA, Point pointB, Point center, double radius) {
         double baX = pointB.x - pointA.x;
         double baY = pointB.y - pointA.y;
         double caX = center.x - pointA.x;
@@ -93,6 +94,36 @@ public class MathUtil {
         Point p2 = new Point(pointA.x - baX * abScalingFactor2, pointA.y
                 - baY * abScalingFactor2);
         return p1.distanceTo(pointB) < p2.distanceTo(pointB) ? p1 : p2;
+    }
+
+    public static Point lineSegmentCircleIntersectionNear(Point pointA, Point pointB, Point center, double radius) {
+        double baX = pointB.x - pointA.x;
+        double baY = pointB.y - pointA.y;
+        double caX = center.x - pointA.x;
+        double caY = center.y - pointA.y;
+
+        double a = baX * baX + baY * baY;
+        double bBy2 = baX * caX + baY * caY;
+        double c = caX * caX + caY * caY - radius * radius;
+
+        double pBy2 = bBy2 / a;
+        double q = c / a;
+
+        double disc = pBy2 * pBy2 - q;
+        // If there are any cases where disc is very small but negative(ex. -1.17e16), we need to set it to zero
+        if (disc < 0 && Math.abs(disc) > EPSILON) return null;
+        else if (Math.abs(disc) < EPSILON) disc = 0;
+        // if disc == 0 ... dealt with later
+        double tmpSqrt = Math.sqrt(disc);
+        double abScalingFactor1 = -pBy2 + tmpSqrt;
+        double abScalingFactor2 = -pBy2 - tmpSqrt;
+
+        Point p1 = new Point(pointA.x - baX * abScalingFactor1, pointA.y
+                - baY * abScalingFactor1);
+        if (disc == 0) return p1;
+        Point p2 = new Point(pointA.x - baX * abScalingFactor2, pointA.y
+                - baY * abScalingFactor2);
+        return p1.distanceTo(pointA) < p2.distanceTo(pointA) ? p1 : p2;
     }
 
     private static int sign(double n) {

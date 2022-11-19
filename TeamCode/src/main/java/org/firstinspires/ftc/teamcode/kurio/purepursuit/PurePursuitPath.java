@@ -28,7 +28,7 @@ public class PurePursuitPath {
     // waypoints[currPoint + 1]. currPoint = n-1 means we're done.
     public int currPoint;
     boolean interrupting;
-    public ElapsedTime timeUntilDeadman;
+    public ElapsedTime killSwitchTimer;
 
     public PurePursuitPath(Robot robot, List<WayPoint> waypoints) {
         // We need to deep copy our linked list so the same point doesn't get flipped multiple times
@@ -40,7 +40,7 @@ public class PurePursuitPath {
         this.currPoint = 0;
         this.robot = robot;
         this.interrupting = false;
-        this.timeUntilDeadman = new ElapsedTime();
+        this.killSwitchTimer = new ElapsedTime();
 
         if (!(waypoints.get(waypoints.size() - 1) instanceof StopWayPoint)) {
             throw new IllegalArgumentException("Final Pure Pursuit waypoint must be a StopWaypoint!");
@@ -48,8 +48,11 @@ public class PurePursuitPath {
     }
 
     public void update() {
+        // wrking statussiy
         Pose robotPosition = robot.getPose().clone();
         Pose robotVelocity = robot.getVelocity().clone();
+
+//        trackToLine(robotPosition, robotVelocity, waypoints.get(currPoint), waypoints.get(currPoint + 1));
 
         // Check whether we should advance to the next piece of the curve
         boolean jumpToNextSegment;
@@ -57,10 +60,10 @@ public class PurePursuitPath {
             jumpToNextSegment = false;
             WayPoint target = waypoints.get(currPoint + 1);
 
-            if (target instanceof StopWayPoint && timeUntilDeadman.milliseconds() > STOP_SWITCH) {
+            if (target instanceof StopWayPoint && killSwitchTimer.milliseconds() > STOP_SWITCH && robotPosition.distanceTo(target) <= ((StopWayPoint) target).allowedPositionError) {
                 jumpToNextSegment = true;
             } else if (!(target instanceof StopWayPoint) || robot.getVelocity().distToOrigin() > MIN_VELOCITY) {
-                timeUntilDeadman.reset();
+                killSwitchTimer.reset();
             }
 
             if (target instanceof StopWayPoint) {
@@ -103,7 +106,7 @@ public class PurePursuitPath {
         Line currSegment = new Line(start, end);
         Point center = currSegment.nearestLinePoint(robotPosition);
 
-        Point intersection = MathUtil.lineSegmentCircleIntersection(
+        Point intersection = MathUtil.lineSegmentCircleIntersectionFar(
                 start, end, center, end.followDistance
         );
 
