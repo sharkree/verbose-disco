@@ -1,3 +1,7 @@
+## About this repository:
+
+Pure pursuit stuff I gave up because I couldn't get it to work :clown: :nerd:
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Freight Frenzy (2021-2022) competition season.
